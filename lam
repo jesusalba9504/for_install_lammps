@@ -1,0 +1,22 @@
+gunzip lammps-stable.tar.gz
+tar xvf lammps-stable.tar.gz
+cd lammps-###/src
+make -j 4 mpi
+make ps
+make yes-#(a package)
+#(selected packages)>1,2,3,4,6,7,kokkos,kspace,manybody,mc,misc,molecule,
+rigid,qeq,user-:diffraction,eff,meamc,reaxc.
+cd ..
+cd lib/reax
+make -f Makefile.gfortran
+make yes-reax
+
+make -j 5 mpi
+sudo cp lmp_mpi /usr/local/bin/
+
+#to change the number of cores available for the mpi run add the next line to the end of the .bashrc file on the home dir
+
+export  OMP_NUM_THREADS=8
+
+# 4 is the number I select, my pc has 8 cores, I just select the half.
+

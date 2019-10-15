@@ -1,0 +1,90 @@
+On Wed, Dec 16, 2015 at 8:15 AM, Dormohammadi, Hossein
+<dormohah@...> wrote:
+> Hello everyone,
+>
+> I am trying to apply external electric field to a layer of metal atoms using
+> ReaxFF and fix efield. I am new in this field. The problem is when I am
+> applying that field I can not see expected change in charge of atoms in
+> output file (from compute charge) . I do not know why. Do you have any idea
+> what is the problem? This is my input script and attached are geometry and
+
+the explanation is obvious from reading the fix efield documentation.
+it very clearly states that what fix efield does is adding a charge
+dependent force to atoms. that is a crude empirical approximation to
+how charged particles react to an external field. it does *not* in any
+form model how an electric field would influence the charge
+distribution. the charge equilibration process in reax has no
+knowledge of it. technically, there is no electrical field, but just
+an added force. if you want to model the reaction of a system modeled
+with reaxff under an external electrical field, you have to modify the
+reaxff code accordingly in a rather non-trivial manner.
+
+axel.
+
+
+> ReaxFF input files.
+>
+> Thank you in advance,
+> H. Dormohammadi
+>
+>
+>
+> dimension          3
+> boundary          p p m
+> units                  real
+>
+> atom_style            charge
+> read_data             Ni.dat
+>
+> # create groups
+> group                 Ni type 1
+>
+> region                electricfield1 block 0.0 10.50 0.0 12.0 9.0 11.0
+> group  eef region electricfield1
+>
+> #ReaXFF
+> pair_style           reax/c NULL
+> pair_coeff            * * ffield.reax Ni
+>
+> neighbor           2 bin
+> neigh_modify   every 10 delay 0 check no
+>
+> fix                       1 all nvt temp 300.0 300.0 1000.0
+> fix                       2 all qeq/reax 1 0.0 10.0 1e-6   reax/c
+>
+> fix                       3 all reax/c/species 1 50 1000 species.out element
+> Ni position 1000 Ni.pos
+> fix                       4 all reax/c/bonds 1000 bonds.reaxc
+>
+> velocity              all create 300.0 4928459 rot yes mom yes
+>
+> minimize             1.0e-6 1.0e-8 1000 1000
+>
+> compute              charge all property/atom  q
+> dump                  102 all custom 1000 dump.charge id type x y z c_charge
+>
+> thermo                1000
+> thermo_style        custom step temp pe ke etotal
+>
+> #run variables
+> timestep              0.10
+> run                     40000
+>
+> fix                   5 eef efield 0.0 0.0 0.6
+> run            20000
+>
+> ------------------------------------------------------------------------------
+>
+> _______________________________________________
+> lammps-users mailing list
+> lammps-users@...
+> https://lists.sourceforge.net/lists/listinfo/lammps-users
+>
+
+
+
+-- 
+Dr. Axel Kohlmeyer  akohlmey@...  http://goo.gl/1wk0
+College of Science & Technology, Temple University, Philadelphia PA, USA
+International Centre for Theoretical Physics, Trieste. Italy.
+
