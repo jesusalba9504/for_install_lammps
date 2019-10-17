@@ -1,4 +1,4 @@
- # ZnO with wurtzite structure with box vectors H1=[2-1-10], H2=[-12-10], H3=[0001].
+ # ZnO with wurtzite structure with box vectors H1=[1000], H2=[0100], H3=[0001].
  CRYSTAL
  PRIMVEC
       3.24000000        0.00000000        0.00000000
