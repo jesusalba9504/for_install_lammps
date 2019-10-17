@@ -9,9 +9,11 @@ rigid,qeq,user-:diffraction,eff,meamc,reaxc.
 cd ..
 cd lib/reax
 make -f Makefile.gfortran
+cd ../..
+cd src
 make yes-reax
 
-make -j 5 mpi
+make -j 4 mpi
 sudo cp lmp_mpi /usr/local/bin/
 
 #to change the number of cores available for the mpi run add the next line to the end of the .bashrc file on the home dir
